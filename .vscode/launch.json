@@ -1,0 +1,21 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "SalseSavvyApplication",
+            "request": "launch",
+            "mainClass": "com.example.demo.SalseSavvyApplication",
+            "projectName": "SalseSavvy"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-SalseSavvyApplication<SalseSavvy>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.example.demo.SalseSavvy.SalseSavvyApplication",
+            "projectName": "SalseSavvy",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
