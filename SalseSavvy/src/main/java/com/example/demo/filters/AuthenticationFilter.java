@@ -33,11 +33,11 @@ public class AuthenticationFilter implements Filter {
 
     private static final String ALLOWED_ORIGIN = "http://localhost:5174";
 
-    private static final String[] UNAUTHENTICATED_PATHS = {
-            "/api/users/register",
-            "/api/auth/login"
-    };
-
+  private static final String[] UNAUTHENTICATED_PATHS = {
+        "/api/users/register",
+        "/api/auth/login",
+        "/api/products"
+};
     public AuthenticationFilter(AuthService authService, UserRepository userRepository) {
         System.out.println("Filter Started.");
         this.authService = authService;
@@ -66,6 +66,12 @@ public class AuthenticationFilter implements Filter {
 
         String requestURI = httpRequest.getRequestURI();
         logger.info("Request URI: {}", requestURI);
+
+        // Only guard actual API and admin routes — let the frontend (static files) through untouched
+        if (!requestURI.startsWith("/api/") && !requestURI.startsWith("/admin/")) {
+            chain.doFilter(request, response);
+            return;
+        }
 
         // Allow unauthenticated paths
         if (Arrays.asList(UNAUTHENTICATED_PATHS).contains(requestURI)) {
@@ -115,13 +121,6 @@ public class AuthenticationFilter implements Filter {
                     "Forbidden: Admin access required");
             return;
         }
-
-        // if (requestURI.startsWith("/api/") && role != Role.CUSTOMER) {
-        //     sendErrorResponse(httpResponse,
-        //             HttpServletResponse.SC_FORBIDDEN,
-        //             "Forbidden: Customer access required");
-        //     return;
-        // }
 
         // Attach user details to request
         httpRequest.setAttribute("authenticatedUser", authenticatedUser);

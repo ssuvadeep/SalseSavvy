@@ -33,23 +33,20 @@ public class ProductController {
             // Retrieve authenticated user from request (set by AuthenticationFilter)
             User authenticatedUser = (User) request.getAttribute("authenticatedUser");
 
-            if (authenticatedUser == null) {
-                return ResponseEntity.status(401)
-                        .body(Map.of("error", "Unauthorized access"));
-            }
+         
 
             // Fetch products based on category filter
             List<Product> products = productService.getProductsByCategory(category);
 
             Map<String, Object> response = new HashMap<>();
 
-            // Add user info
-            Map<String, String> userInfo = new HashMap<>();
-            userInfo.put("name", authenticatedUser.getUsername());
-            userInfo.put("role", authenticatedUser.getRole().name());
-
-            response.put("user", userInfo);
-
+// Add user info only if logged in
+if (authenticatedUser != null) {
+    Map<String, String> userInfo = new HashMap<>();
+    userInfo.put("name", authenticatedUser.getUsername());
+    userInfo.put("role", authenticatedUser.getRole().name());
+    response.put("user", userInfo);
+}
             // Add product details
             List<Map<String, Object>> productList = new ArrayList<>();
 

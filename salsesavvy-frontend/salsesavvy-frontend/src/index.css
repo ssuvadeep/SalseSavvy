@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #F7F4EC;
+  color: #1C1C1E;
+}
+
+@layer utilities {
+  .tag-notch::before {
+    content: "";
+    position: absolute;
+    left: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #F7F4EC;
+    border: 1px solid #E4DECD;
+  }
+}

@@ -3,6 +3,7 @@ package com.example.demo.services;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.entities.Role;
 import com.example.demo.entities.User;
 import com.example.demo.repositories.UserRepository;
 
@@ -25,6 +26,10 @@ public class UserService {
 
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new IllegalArgumentException("Email already exists");
+        }
+
+        if (user.getRole() == null) {
+            user.setRole(Role.CUSTOMER);
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
