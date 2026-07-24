@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -79,7 +80,8 @@ public class AdminProductService {
         }
 
         // Delete product images
-        productImageRepository.deleteById(productId);
+        List<ProductImage> images = productImageRepository.findByProduct_ProductId(productId);
+    productImageRepository.deleteAll(images);
 
         // Delete product
         productRepository.deleteById(productId);

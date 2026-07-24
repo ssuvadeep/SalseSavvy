@@ -51,10 +51,6 @@ public class AuthController {
             cookie.setMaxAge(3600); // 1 hour
             response.addCookie(cookie);
 
-            // Optional SameSite=None header (for cross-origin)
-            response.addHeader("Set-Cookie",
-                    String.format("authToken=%s; HttpOnly; Path=/; Max-Age=3600; SameSite=None", token)
-            );
 
             // Response body
             Map<String, Object> responseBody = new HashMap<>();

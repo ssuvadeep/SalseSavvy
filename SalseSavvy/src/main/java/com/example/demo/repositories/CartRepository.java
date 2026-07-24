@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CartRepository extends JpaRepository<CartItem, Integer> {
@@ -15,5 +16,7 @@ public interface CartRepository extends JpaRepository<CartItem, Integer> {
            "JOIN FETCH c.product p " +
            "WHERE c.user.userId = :userId")
     List<CartItem> findCartItemsWithProductDetails(@Param("userId") int userId);
+
+    Optional<CartItem> findByUser_UserIdAndProduct_ProductId(int userId, int productId);
 
 }

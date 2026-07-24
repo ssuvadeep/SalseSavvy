@@ -89,4 +89,29 @@ public class CartService {
 
         return response;
     }
+
+    // Add a product to the cart (or increase quantity if it's already there)
+    public void addToCart(int userId, int productId, int quantity) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+
+        Optional<CartItem> existingItem =
+                cartRepository.findByUser_UserIdAndProduct_ProductId(userId, productId);
+
+        if (existingItem.isPresent()) {
+            CartItem item = existingItem.get();
+            item.setQuantity(item.getQuantity() + quantity);
+            cartRepository.save(item);
+        } else {
+            CartItem newItem = new CartItem();
+            newItem.setUser(user);
+            newItem.setProduct(product);
+            newItem.setQuantity(quantity);
+            cartRepository.save(newItem);
+        }
+    }
 }

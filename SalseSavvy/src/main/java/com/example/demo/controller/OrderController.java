@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.entities.Order;
 import com.example.demo.entities.User;
 import com.example.demo.services.OrderService;
 
@@ -18,6 +19,39 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+
+    /**
+     * Converts the user's cart into a PENDING Order.
+     * Frontend calls this first, then calls /api/payments/create-order/{orderId}.
+     */
+    @PostMapping("/checkout")
+    public ResponseEntity<?> checkout(HttpServletRequest request) {
+
+        try {
+            User authenticatedUser = (User) request.getAttribute("authenticatedUser");
+
+            if (authenticatedUser == null) {
+                return ResponseEntity.status(401).body(Map.of("error", "User not authenticated"));
+            }
+
+            Order order = orderService.checkout(authenticatedUser);
+
+            return ResponseEntity.ok(Map.of(
+                    "orderId", order.getOrderId(),
+                    "totalAmount", order.getTotalAmount(),
+                    "status", order.getStatus()
+            ));
+
+        } catch (IllegalStateException e) {
+
+            return ResponseEntity.status(400).body(Map.of("error", e.getMessage()));
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(Map.of("error", "An unexpected error occurred"));
+        }
+    }
 
     /**
      * Fetch all successful orders for the authenticated user

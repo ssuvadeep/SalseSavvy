@@ -20,6 +20,7 @@ public class CartController {
     @Autowired
     private CartService cartService;
 
+    @Autowired
     private UserRepository userRepository;
 
     // Fetch all cart items for the authenticated user
@@ -37,6 +38,25 @@ public class CartController {
         Map<String, Object> cartItems = cartService.getCartItems(user.getUserId());
 
         return ResponseEntity.ok(cartItems);
+    }
+
+    // Add an item to the cart
+    @PostMapping("/add")
+    public ResponseEntity<?> addToCart(@RequestBody Map<String, Integer> request,
+                                        HttpServletRequest httpRequest) {
+
+        User user = (User) httpRequest.getAttribute("authenticatedUser");
+
+        if (user == null) {
+            return ResponseEntity.status(401).body("User not authenticated");
+        }
+
+        int productId = request.get("productId");
+        int quantity = request.get("quantity");
+
+        cartService.addToCart(user.getUserId(), productId, quantity);
+
+        return ResponseEntity.ok("Item added to cart");
     }
 }
  
